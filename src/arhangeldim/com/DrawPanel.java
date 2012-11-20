@@ -66,13 +66,19 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
 	class DrawingThread extends Thread {
 
+		private int speed;
+
+		public DrawingThread(int speed) {
+			this.speed = speed;
+		}
+
 		@Override
 		public void run() {
 			try {
 				while (!Thread.interrupted()) {
 					curve.updateControlPointsPosition(WSIZE, HSIZE);
 					repaint();
-					Thread.sleep(500);
+					Thread.sleep(1000 / speed);
 				}
 			} catch (InterruptedException e) {
 				System.out.println("Interrupted: " + e.getMessage());
@@ -82,9 +88,9 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 		}
 	}
 
-	public void run() {
+	public void run(int speed) {
 		if (curve != null) {
-			drawingThread = new DrawingThread();
+			drawingThread = new DrawingThread(speed);
 			drawingThread.start();
 		}
 	}

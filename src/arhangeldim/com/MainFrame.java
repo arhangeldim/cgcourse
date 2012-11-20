@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainFrame extends JFrame {
 
@@ -20,6 +22,7 @@ public class MainFrame extends JFrame {
 	private ControlActionListener controlListener;
 
 	private JButton runBtn;
+	private JTextField speedFld;
 
 	private boolean isRunning = false;
 
@@ -41,9 +44,13 @@ public class MainFrame extends JFrame {
 		runBtn.setActionCommand(CMD_RUN);
 		runBtn.addActionListener(controlListener);
 
+		speedFld = new JTextField("1");
+		speedFld.setColumns(2);
+
 		control.setLayout(new FlowLayout());
 		control.add(clrBtn);
 		control.add(runBtn);
+		control.add(speedFld);
 
 		JRadioButton bezierRadioBtn = new JRadioButton("Bezier");
 		bezierRadioBtn.setActionCommand(CMD_BEZIER);
@@ -83,10 +90,20 @@ public class MainFrame extends JFrame {
 					runBtn.setText("Run");
 					isRunning = false;
 					canvas.stop();
+					speedFld.setText("1");
 				} else {
 					runBtn.setText("Stop");
 					isRunning = true;
-					canvas.run();
+					String speedStr = speedFld.getText();
+					Pattern p = Pattern.compile("[0-9]{1,2}");
+					Matcher m = p.matcher(speedStr);
+					int speed = Integer.parseInt(speedStr);
+					if (m.matches()) {
+						canvas.run(speed);
+					} else {
+						canvas.run(1);
+						speedFld.setText("1");
+					}
 				}
 			}
 		}
