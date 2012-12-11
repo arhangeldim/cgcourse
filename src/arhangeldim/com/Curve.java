@@ -18,12 +18,21 @@ public abstract class Curve {
 
 	protected boolean isCaptured;
 	protected int markerIndex;
+	protected boolean drawDividingPoints = true;
 
 	public static final int POINT_MARKER_WIDTH = 8;
 	public static final int POINT_MARKER_HEIGHT = 8;
 
 	public Curve() {
 		controlPoints = new ArrayList<Point2D.Double>();
+	}
+	
+	public void generateCurve(int width, int height) {
+		Random r = new Random();
+		for (int i = 0; i < 5; i++) {
+			controlPoints.add(new Point2D.Double(r.nextInt(width), r.nextInt(height)));
+		}
+		
 	}
 
 	private Velocity generateVelocity() {
@@ -87,7 +96,7 @@ public abstract class Curve {
 	protected void drawCurveByPoints(Graphics2D g, List<Point2D.Double> points, Color c) {
 		if (points.size() < 2)
 			return;
-
+		g.setStroke(new BasicStroke(1f));
 		g.setColor(c);
 		for (int i = 0; i < points.size() - 1; i++)
 			g.draw(new Line2D.Double(points.get(i), points.get(i + 1)));
@@ -138,7 +147,6 @@ public abstract class Curve {
 					// Capture this node
 					markerIndex = controlPoints.lastIndexOf(p);
 					isCaptured = true;
-					System.out.println("Capture point index = " + markerIndex);
 				}
 			}
 		}
